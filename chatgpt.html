@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Insertion Sort Visualization</title>
+  <style>
+    /* styles for the array bars */
+    .bar {
+      display: inline-block;
+      width: 20px;
+      height: 100px;
+      margin-right: 2px;
+      background-color: rgb(193, 193, 193);
+    }
+    /* styles for the selected bar */
+    .selected {
+      background-color: rgb(255, 30, 30);
+    }
+    /* responsive styles */
+    #container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    /* background image */
+    html {
+      width: 100vw;
+      height: 100vh;
+      background-image: url("./halloween-7487706.jpg");
+      background-repeat: no-repeat;
+      background-size:cover;
+      font-family: Arial, sans-serif; /* change the font */
+      overflow: hidden;
+    }
+    body {
+  display: flex;
+  justify-content: center; /* centers items horizontally */
+  align-items: center; /* centers items vertically */
+  height: 100vh; /* makes sure the page takes up 100% of the viewport height */
+}
+
+#container {
+  width: 80%; /* sets a fixed width for the container */
+}
+h1,label {
+  background: linear-gradient(to right, white, gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+body {
+  font-family: Arial, sans-serif;
+}
+  </style>
+</head>
+<body>
+  <div>
+<h1>Insertion Sort Visualization</h1>
+<div id="container"></div>
+<button onclick="startSort()">Start Sort</button>
+<label>Choose size of problem:</label>
+<select id="size" onchange="createBars()">
+  <option value="10">10</option>
+  <option value="20">20</option>
+  <option value="50">50</option>
+  <option value="100">100</option>
+</select>
+</div>
+
+<script>
+  let values = [];
+  let container = document.getElementById('container');
+
+  // function to create the initial bars on the page
+  function createBars() {
+    container.innerHTML = ''; //clear existing bars
+    let size = document.getElementById('size').value;
+    values = [];
+    for (let i = 0; i < size; i++) {
+      values.push(Math.floor(Math.random() * 100));
+    }
+
+    values.forEach(value => {
+      let bar = document.createElement('div');
+      bar.classList.add('bar');
+      bar.style.height = value + 'px';
+      container.appendChild(bar);
+    });
+  }
+
+  // the insertion sort function
+  function insertionSort(arr) {
+    for (let i = 1; i < arr.length; i++) {
+      let key = arr[i];
+      let j = i - 1;
+
+      while (j >= 0 && arr[j] > key) {
+        arr[j + 1] = arr[j];
+        j = j - 1;
+      }
+      arr[j + 1] = key;
+    }
+    return arr;
+  }
+
+  // function to start the sorting process
+  async function startSort() {
+    let bars = document.querySelectorAll('.bar');
+    values = await insertionSortAnim(values, bars);
+    for (let i = 0; i < values.length; i++) {
+      bars[i].style.height = values[i] + 'px';
+    }
+  }
+
+  // function to animate the insertion sort process
+  async function insertionSortAnim(arr, bars) {
+    for (let i = 1; i < arr.length; i++) {
+        let key = arr[i];
+        let j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+arr[j + 1] = arr[j];
+j = j - 1;
+bars[j + 1].style.height = arr[j] + 'px';
+bars[j + 1].classList.add('selected');
+await sleep(40); // wait for 50ms before updating next bar
+bars[j + 1].classList.remove('selected');
+}
+arr[j + 1] = key;
+bars[j + 1].style.height = key + 'px';
+await sleep(40); // wait for 50ms before updating next bar
+}
+return arr;
+}
+
+// helper function to add delay
+function sleep(ms) {
+return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+createBars();
+</script>
+
+</body>
+</html>
